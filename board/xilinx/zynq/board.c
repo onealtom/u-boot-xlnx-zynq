@@ -28,6 +28,7 @@ Xilinx_desc fpga;
 Xilinx_desc fpga010 = XILINX_XC7Z010_DESC(0x10);
 Xilinx_desc fpga020 = XILINX_XC7Z020_DESC(0x20);
 Xilinx_desc fpga030 = XILINX_XC7Z030_DESC(0x30);
+Xilinx_desc fpga015 = XILINX_XC7Z015_DESC(0x15);
 Xilinx_desc fpga045 = XILINX_XC7Z045_DESC(0x45);
 Xilinx_desc fpga100 = XILINX_XC7Z100_DESC(0x100);
 #endif
@@ -51,6 +52,9 @@ int board_init(void)
 		break;
 	case XILINX_ZYNQ_7030:
 		fpga = fpga030;
+		break;
+	case XILINX_ZYNQ_7015:
+		fpga = fpga015;
 		break;
 	case XILINX_ZYNQ_7045:
 		fpga = fpga045;

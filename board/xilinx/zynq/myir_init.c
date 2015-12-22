@@ -109,8 +109,9 @@ struct gpio_ctrl_s {
 #define GET_GPIO_BANK(gpio)		(gpio<32? GPIO_BANK0: GPIO_BANK1)
 #define GET_GPIO_PIN(gpio)		(gpio % 32)
 
-/* MIO51 */
-#define MYIR_RESET_PIN	51
+
+#define MYIR_RESET_PIN	7 // eth,usb phy and hdmi reset ctrl--PS_500_MIO7
+#define	MYIR_WDT_PIN	0 // external watchdog ctrl pin--PS_500_MIO0
 
 #define is_slcr_lock()	(readl(SLCR_LOCKSTA)&0x1)
 
@@ -220,13 +221,50 @@ static void gpio_set_output(u32 gpio, u32 value)
 	gpio_set_value(gpio, value);
 }
 
-/* 
- * Init MIO51(bank1) for reset control pin
- */
-static void gpio_init(void)
+
+static void gpio_set_input(u32 gpio)
 {
-	gpio_set_output(MYIR_RESET_PIN, 0);
+	u32 val;
+	u32 bank = GET_GPIO_BANK(gpio);
+	u32 pin = GET_GPIO_PIN(gpio);
+	u32 *reg_dirm, *reg_oen;
+	u32 slcr_locksta;
+	
+	if (gpio >= MAX_GPIO) {
+		printf("gpio out of range (should be < %d)!\n", MAX_GPIO);
+		return ;
+	}
+
+	slcr_locksta = is_slcr_lock();
+	if (slcr_locksta)
+		zynq_slcr_unlock();
+
+	/* set pinmux to GPIO */
+	writel(GPIO_OUTPUT_1V8_CONFIG, &slcr_base->mio_pin[gpio]);
+
+	if (slcr_locksta)
+		zynq_slcr_lock();
+		
+	/* set GPIO to output */
+	switch (bank) {
+		case GPIO_BANK0:
+			reg_dirm = &gpio_base->dirm_0;
+			reg_oen = &gpio_base->oen_0;
+			break;
+		case GPIO_BANK1:
+			reg_dirm = &gpio_base->dirm_1;
+            reg_oen = &gpio_base->oen_1;
+			break;
+	}
+
+	val = readl(reg_dirm);
+	val &= ~(1 << pin);
+	writel(val, reg_dirm);
+	val = readl(reg_oen);
+	val &= ~(1 << pin);
+	writel(val, reg_oen);
 }
+
 
 /*
  * Reset I2C0 and I2C1 controller
@@ -256,8 +294,9 @@ int myir_board_init(void)
 {
 	printf("%s\n", __func__);
 
-	#if 0
-	gpio_init();
+	#if 1
+	gpio_set_input(MYIR_WDT_PIN);
+	gpio_set_output(MYIR_RESET_PIN, 0);	
 
 //	printf(">> get gpio %d: %d\n", MYIR_RESET_PIN, gpio_get_value(MYIR_RESET_PIN));
 
