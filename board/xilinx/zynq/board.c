@@ -208,8 +208,9 @@ int board_mmc_init(bd_t *bd)
 
 int dram_init(void)
 {
-	gd->ram_size = CONFIG_SYS_SDRAM_SIZE;
-
+	//gd->ram_size = CONFIG_SYS_SDRAM_SIZE;
+gd->ram_size = 0x20000000;
+printf("ram=%d\n",gd->ram_size);
 	zynq_ddrc_init();
 
 	return 0;

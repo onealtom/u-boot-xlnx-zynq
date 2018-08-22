@@ -180,6 +180,8 @@ int spi_flash_cmd_erase_ops(struct spi_flash *flash, u32 offset, size_t len)
 	int ret = -1;
 	int is_dual = flash->spi->is_dual;
 
+	u32 toplen = len;
+
 	erase_size = flash->erase_size;
 	if (offset % erase_size || len % erase_size) {
 		debug("SF: Erase offset/length not multiple of erase size\n");
@@ -210,8 +212,9 @@ int spi_flash_cmd_erase_ops(struct spi_flash *flash, u32 offset, size_t len)
 
 		offset += erase_size;
 		len -= erase_size;
+		printf("\rErasing %2i %% completed  ", (toplen-len)/(toplen/100)  );
 	}
-
+	printf("\n");
 	return ret;
 }
 
