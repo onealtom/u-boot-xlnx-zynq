@@ -158,6 +158,7 @@ static const struct spi_flash_params spi_flash_params_table[] = {
 	 SECT_4K},
 	{"W25Q128FW",	   0xef6018, 0x0,     64 * 1024,  256,	RD_QR | WR_QPP |
 	 SECT_4K},
+	{"W25M512JE",	   0xef7119, 0x0,     64 * 1024,  1024,	RD_QR | WR_QPP },
 #endif
 	/*
 	 * Note:

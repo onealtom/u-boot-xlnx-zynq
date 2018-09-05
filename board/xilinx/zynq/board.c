@@ -129,7 +129,7 @@ int board_late_init(void)
 	
 	switch (boot_mode) {
 	case QSPI_MODE:
-		setenv("modeboot", "qspiboot");
+		setenv("modeboot", "sf_boot");
 		break;
 	case NAND_FLASH_MODE:
 		setenv("modeboot", "nandboot");
@@ -138,7 +138,7 @@ int board_late_init(void)
 		setenv("modeboot", "norboot");
 		break;
 	case SD_MODE:
-		setenv("modeboot", "sdboot");
+		setenv("modeboot", "sd_boot");
 		break;
 	case JTAG_MODE:
 		setenv("modeboot", "jtagboot");
