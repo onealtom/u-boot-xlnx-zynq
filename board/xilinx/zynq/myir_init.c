@@ -110,7 +110,7 @@ struct gpio_ctrl_s {
 #define GET_GPIO_PIN(gpio)		(gpio % 32)
 
 
-#define MYIR_RESET_PIN	7 // eth,usb phy and hdmi reset ctrl--PS_500_MIO7
+#define MYIR_RESET_PIN	47 // eth,usb phy and hdmi reset ctrl--PS_500_MIO7
 #define	MYIR_WDT_PIN	0 // external watchdog ctrl pin--PS_500_MIO0
 
 #define is_slcr_lock()	(readl(SLCR_LOCKSTA)&0x1)
